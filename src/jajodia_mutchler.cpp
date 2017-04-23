@@ -132,7 +132,6 @@ void JajodiaMutchler::process_message( SimpleMessage *message )
 	connections.wait_for_connections();
 
 	JajodiaMessage* mm = &message->payload.jajodia_m;
-	int id = mm->id;
 
 	switch( mm->jajodia_t )
 	{
