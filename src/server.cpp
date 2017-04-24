@@ -19,7 +19,7 @@
 
 using namespace std;
 
-#define NUM_OF_WRITES 2
+#define NUM_OF_UPDATES 2
 
 // function prototypes
 void run_server( int port );
@@ -94,23 +94,37 @@ int main( int argc, char const *argv[] )
     JajodiaMutchler::instance().init( &server_config, my_conf.number );
     cout << "[INFO] partition initialized" << endl;
 
-    /*
-    if ( server_num == 1 )
+    // Execute update
+
+    // Stage 1.
+    for ( int i = 0; i < NUM_OF_UPDATES; i++ )
     {
-        cout << "[DEBUG] Terminating server..." << endl;
-        server_ptr->terminate();
-        return 0;
+        JajodiaMutchler::instance().execute_update();
     }
-    */
 
-    // server connections
-    server_connections.init( server_config.get_all() );
+    int s1[] = { 5, 6, 7, 8 };
+    vector<int> sites1( s1, s1 + sizeof( s1 ) / sizeof( int ) );
 
-    // execute update
-    JajodiaMutchler::instance().execute_update();
+    int s2[] = { 1, 2, 3, 4 };
+    vector<int> sites2( s2, s2 + sizeof( s2 ) / sizeof( int ) );
 
-    // reset config
 
+    // Stage 2.
+    // do_partition
+    if ( server_num == 1 || server_num == 2 || server_num == 3 || server_num == 4 )
+    {
+        JajodiaMutchler::instance().close_connections( sites1 );
+    }
+
+    if ( server_num == 5 || server_num == 6 || server_num == 7 || server_num == 8 )
+    {
+        JajodiaMutchler::instance().close_connections( sites2 );
+    }
+
+    for ( int i = 0; i < NUM_OF_UPDATES; i++ )
+    {
+        JajodiaMutchler::instance().execute_update();
+    }
 
     while( !do_terminate )
     {

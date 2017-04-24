@@ -65,10 +65,10 @@ void JajodiaMutchler::execute_update( void )
 
 
 	// Get #connections
-	int num_connections = num_site_available + 1; // connections.get_num_of_connection();
+	int num_connections = num_site_available + 1;
 
 	std::cout << "Minimum site: " << min_site_id << std::endl;
-	std::cout << "Number of vailable sites: " << num_site_available << std::endl;
+	std::cout << "Number of reachable sites: " << num_site_available << std::endl;
 
 	if ( my_id != min_site_id )
 	{
@@ -206,7 +206,7 @@ void JajodiaMutchler::broadcast_all( JAJODIA_MSG_TYPE type )
 void JajodiaMutchler::process_release_lock( void )
 {
 	updating = false;
-	std::cout << "[INFO] aft release VN = "
+	std::cout << "[INFO] after release VN = "
 			  << VN << " RU = " << RU
 			  << " DS = " << DS << std::endl; // added - Genya
 }
@@ -313,7 +313,7 @@ bool JajodiaMutchler::is_distinguished()
 		int VNi = std::get<0>( responses[i].second );
 		if ( VNi == M )
 		{
-			std::cout << "[DEBUG] Set I: " << responses[i].first << std::endl;
+			//std::cout << "[DEBUG] Set I: " << responses[i].first << std::endl;
 			I.push_back( responses[i].first );
 			N = std::get<1>( responses[i].second );
 		}
@@ -369,6 +369,13 @@ void JajodiaMutchler::send( int id, SimpleMessage &message )
 	conn->send( &message, sizeof( SimpleMessage ) );
 }
 
+void JajodiaMutchler::close_connections( std::vector<int>& sites )
+{
+	for ( int i = 0; i < sites.size(); i++ )
+	{
+		connections.close( sites[i] );
+	}
+}
 
 
 
