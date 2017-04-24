@@ -91,7 +91,8 @@ enum JAJODIA_MSG_TYPE {
     LOCK_REQUEST,
     RELEASE_LOCK,
     ABORT,
-    COMMIT
+    COMMIT,
+    DRYRUN
 };
 
 const std::string MAEKAWA_MESSAGES[] = {

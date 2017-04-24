@@ -31,10 +31,12 @@ private:
 	void process_vote_request( JajodiaMessage* mm );
 	void process_abort( JajodiaMessage* mm );
 	void process_commit( JajodiaMessage* mm );
+	void process_dryrun( JajodiaMessage* mm );
 	void process_lock_request( void );
 	void process_release_lock( void );
+	void execute_dryrun( void );
 	bool is_distinguished();
-	void do_update();
+	void do_update( JajodiaMessage *mm );
 	void catch_up();
 
 	void send( int id, SimpleMessage& message );
@@ -47,6 +49,11 @@ private:
     int my_id;
     int my_token_holder;
     bool updating;
+
+    // Dryrun variables
+    bool dryrun;
+    int min_site_id;
+    int num_site_available;
 
     // Data structure for Jajodia-Mutchler algorithm
 	int VN;     // version number

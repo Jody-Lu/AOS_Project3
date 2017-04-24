@@ -94,15 +94,20 @@ int main( int argc, char const *argv[] )
     JajodiaMutchler::instance().init( &server_config, my_conf.number );
     cout << "[INFO] partition initialized" << endl;
 
+    /*
+    if ( server_num == 1 )
+    {
+        cout << "[DEBUG] Terminating server..." << endl;
+        server_ptr->terminate();
+        return 0;
+    }
+    */
+
     // server connections
     server_connections.init( server_config.get_all() );
 
-    // update
-    for ( int i = 0; i < NUM_OF_WRITES; i++ )
-        if ( server_num == 1 )
-        {
-            JajodiaMutchler::instance().execute_update();
-        }
+    // execute update
+    JajodiaMutchler::instance().execute_update();
 
     // reset config
 
