@@ -181,7 +181,15 @@ int main( int argc, char const *argv[] )
         JajodiaMutchler::instance().execute_update();
     }
 
-    
+    // Termination
+    JajodiaMutchler::instance().reset_connections();
+    if ( server_num == 1 )
+    {
+        JajodiaMutchler::instance().broadcast_all( TERMINATE );
+        JajodiaMutchler::instance().close();
+        server_ptr->terminate();
+        do_terminate = true;
+    }
 
     while( !do_terminate )
     {
@@ -227,6 +235,22 @@ void on_client_data( void* data, TcpSocket* c_sock )
     {
         case JAJODIA:
             JajodiaMutchler::instance().process_message( &s_message );
+            break;
+
+        case TERMINATE:
+            JajodiaMutchler::instance().broadcast_all( PREP_TERM );
+            JajodiaMutchler::instance().broadcast_all( TERM );
+            do_terminate = true;
+            server_ptr->terminate();
+            break;
+
+        case PREP_TERM:
+            JajodiaMutchler::instance().close();
+            break;
+
+        case TERM:
+            do_terminate = true;
+            server_ptr->terminate();
             break;
 
         default:

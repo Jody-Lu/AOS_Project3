@@ -391,9 +391,30 @@ void JajodiaMutchler::open_connections( std::vector<int>& sites )
 	}
 }
 
+void JajodiaMutchler::reset_connections( void )
+{
+	connections.close_all();
+	connections.init( config->get_all() );
+	connections.connect_all();
+}
 
+void JajodiaMutchler::broadcast_all( SIMPLE_MSG_TYPE type )
+{
+	const std::vector<Connection>& conns = connections.get_all();
 
+    SimpleMessage msg;
+    msg.msg_t = type;
+    for ( auto& conn: conns )
+    {
+        if ( conn.getId() == my_id )
+        {
+            continue;
+        }
 
+        conn.send( &msg, sizeof(SimpleMessage) );
+        conn.receive( &msg, sizeof(SimpleMessage) );
+    }
+}
 
 
 
