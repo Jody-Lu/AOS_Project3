@@ -43,6 +43,8 @@ void JajodiaMutchler::execute_dryrun( void )
 {
 	num_site_available = 0;
 	min_site_id = my_id;
+	sites_available.clear();
+	sites_available.push_back( my_id );
 
 	int sleep_mil = ( rand() % 95 ) + 90;
 	usleep( sleep_mil * 1000 );
@@ -54,7 +56,6 @@ void JajodiaMutchler::execute_dryrun( void )
 void JajodiaMutchler::execute_update( void )
 {
 	// launch dry run
-
 	execute_dryrun();
 	//std::cout << "[INFO] Execute Dryrun" << std::endl;
 
@@ -63,6 +64,9 @@ void JajodiaMutchler::execute_update( void )
 		usleep( TIME_WAIT_RESPONSE );
 	}
 
+	srand( 1 );
+	std::sort( sites_available.begin(), sites_available.end() );
+	int rand_site = sites_available[ rand() % sites_available.size() ];
 
 	// Get #connections
 	int num_connections = num_site_available + 1;
@@ -70,7 +74,8 @@ void JajodiaMutchler::execute_update( void )
 	//std::cout << "[DEBUG] Minimum site: " << min_site_id << std::endl;
 	//std::cout << "[DEBUG] Number of reachable sites: " << num_site_available << std::endl;
 
-	if ( my_id != min_site_id )
+	//std::cout << "[DEBUG] Random site: " << rand_site << std::endl;
+	if ( my_id != rand_site )
 	{
 		return;
 	}
@@ -111,6 +116,7 @@ void JajodiaMutchler::execute_update( void )
 		// Done - Genya
 		// S does belong to distinguished partition
 		// 1. Modify this node's VN, RU, DS
+		//std::cout << "[DEBUG] Update by site: " << my_id << std::endl;
 		VN = M + 1;
 		RU = responses.size();
 		int newDS = responses[0].first; // update to Min DS in responses
@@ -189,6 +195,7 @@ void JajodiaMutchler::broadcast_all( JAJODIA_MSG_TYPE type )
 		else if ( type == DRYRUN )
 		{
 			JajodiaMessage *r = &message.payload.jajodia_m;
+			sites_available.push_back( r->id );
 			if ( r->id < min_site_id )
 			{
 				min_site_id = r->id;

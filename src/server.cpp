@@ -24,6 +24,7 @@ using namespace std;
 // function prototypes
 void run_server( int port );
 void on_client_data( void* data, TcpSocket* c_sock );
+int generate_random_number( int min, int max );
 
 
 // static global variable
@@ -49,14 +50,6 @@ int main( int argc, char const *argv[] )
         Utils::print_error( "[ERROR] Usage: ./server <client_number>[1-7]" );
         exit( EXIT_FAILURE );
     }
-
-    // Set server file name
-    /*
-    server_file = "server";
-    server_file.append( argv[1] );
-    server_file.append( ".out" );
-    Registry::instance().add_file( server_file );
-    */
 
     // configure quorum
     Config server_config( SERVER_CONFIG_FILE );
@@ -99,7 +92,7 @@ int main( int argc, char const *argv[] )
     // Stage 1.
     for ( int i = 0; i < NUM_OF_UPDATES; i++ )
     {
-        JajodiaMutchler::instance().execute_update();
+        JajodiaMutchler::instance().execute_update( );
     }
 
     // Stage 2.
@@ -182,7 +175,7 @@ int main( int argc, char const *argv[] )
     }
 
     // Termination
-    usleep( 9999999 );
+    usleep( 2999999 );
 
     if ( server_num == 2 )
     {
@@ -260,4 +253,9 @@ void on_client_data( void* data, TcpSocket* c_sock )
     }
 
     c_sock->send( &s_message, sizeof( SimpleMessage ) );
+}
+
+int generate_random_number( int min, int max )
+{
+    return rand() % max + min;
 }

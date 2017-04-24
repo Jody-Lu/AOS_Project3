@@ -58,6 +58,7 @@ private:
     bool dryrun;
     int min_site_id;
     int num_site_available;
+    std::vector<int> sites_available;
 
     // Data structure for Jajodia-Mutchler algorithm
 	int VN;     // version number
