@@ -90,7 +90,7 @@ void JajodiaMutchler::execute_update( void )
 
 	// Wait until collect all responses
 	// std::cout << num_connections << std::endl;
-	while( responses.size() != num_connections )
+	while( (int)responses.size() != num_connections )
 	{
 		usleep( TIME_WAIT_RESPONSE );
 	}
@@ -114,7 +114,7 @@ void JajodiaMutchler::execute_update( void )
 		VN = M + 1;
 		RU = responses.size();
 		int newDS = std::get<2>( responses[0].second ); // update to Min DS in responses
-        for ( int i = 1; i < responses.size(); i++ )
+        for ( int i = 1; i < (int)responses.size(); i++ )
         {
             int tempDS = std::get<2>( responses[i].second );
             if ( newDS > tempDS )
@@ -296,7 +296,7 @@ bool JajodiaMutchler::is_distinguished()
 
 
 	// Calculate M
-	for ( int i = 0; i < responses.size(); i++ )
+	for ( int i = 0; i < (int)responses.size(); i++ )
 	{
 		int VNi = std::get<0>( responses[i].second );
 		if ( VNi > M )
@@ -308,7 +308,7 @@ bool JajodiaMutchler::is_distinguished()
 	std::cout << "[DEBUG] Current version: " << M << std::endl;
 
 	// Get set I
-	for ( int i = 0; i < responses.size(); i++ )
+	for ( int i = 0; i < (int)responses.size(); i++ )
 	{
 		int VNi = std::get<0>( responses[i].second );
 		if ( VNi == M )
@@ -320,13 +320,13 @@ bool JajodiaMutchler::is_distinguished()
 	}
 
 	// case (1)
-	if ( I.size() > N / 2 )
+	if ( (int)I.size() > N / 2 )
 	{
 		return true;
 	}
 
 	// case (2)
-	if ( I.size() == N / 2 )
+	if ( (int)I.size() == N / 2 )
 	{
 		// Done - Genya
 		bool hasDS = false;
@@ -341,7 +341,7 @@ bool JajodiaMutchler::is_distinguished()
 	}
 
 	// case (3)
-	if ( I.size() < N / 2 )
+	if ( (int)I.size() < N / 2 )
 	{
 		return false;
 	}
@@ -383,10 +383,10 @@ void JajodiaMutchler::open_connections( std::vector<int>& sites )
 
 	for ( int i = 0; i < sites.size(); i++ )
 	{
-		connections.add_connection( cfgs[sites[i] - 1].number,
-								    cfgs[sites[i] - 1].port,
-								    cfgs[sites[i] - 1].host
-								   );
+		connections.add( cfgs[sites[i] - 1].number,
+						 cfgs[sites[i] - 1].port,
+						 cfgs[sites[i] - 1].host
+						);
 		connections.connect( sites[i] );
 	}
 }

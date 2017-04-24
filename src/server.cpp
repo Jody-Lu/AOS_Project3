@@ -181,6 +181,8 @@ int main( int argc, char const *argv[] )
         JajodiaMutchler::instance().execute_update();
     }
 
+    
+
     while( !do_terminate )
     {
         usleep( 10000 );

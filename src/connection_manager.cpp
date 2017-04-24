@@ -94,7 +94,7 @@ void ConnectionManager::wait_for_connections(void)
     }
 }
 
-void ConnectionManager::add_connection(int id, int port, std::string& host)
+void ConnectionManager::add(int id, int port, std::string& host)
 {
     connections.emplace_back( id, port, host );
 }

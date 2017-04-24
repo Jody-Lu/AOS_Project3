@@ -35,7 +35,7 @@ class ConnectionManager
         const Connection* get( int id );
         void wait_for_connections( void );
         bool exist( int id );
-        void add_connection( int id, int port, std::string& host );
+        void add( int id, int port, std::string& host );
 
         inline void add( TcpConfig& cfg )
         {
