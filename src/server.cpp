@@ -102,23 +102,57 @@ int main( int argc, char const *argv[] )
         JajodiaMutchler::instance().execute_update();
     }
 
-    int s1[] = { 5, 6, 7, 8 };
-    vector<int> sites1( s1, s1 + sizeof( s1 ) / sizeof( int ) );
-
-    int s2[] = { 1, 2, 3, 4 };
-    vector<int> sites2( s2, s2 + sizeof( s2 ) / sizeof( int ) );
-
-
     // Stage 2.
-    // do_partition
-    if ( server_num == 1 || server_num == 2 || server_num == 3 || server_num == 4 )
+    // Do_partition
+    if ( server_num == 1 || server_num == 2 ||
+         server_num == 3 || server_num == 4 )
     {
-        JajodiaMutchler::instance().close_connections( sites1 );
+        int s[] = { 5, 6, 7, 8 };
+        vector<int> sites( s, s + sizeof( s ) / sizeof( int ) );
+        JajodiaMutchler::instance().close_connections( sites );
     }
 
-    if ( server_num == 5 || server_num == 6 || server_num == 7 || server_num == 8 )
+    if ( server_num == 5 || server_num == 6 ||
+         server_num == 7 || server_num == 8 )
     {
-        JajodiaMutchler::instance().close_connections( sites2 );
+        int s[] = { 1, 2, 3, 4 };
+        vector<int> sites( s, s + sizeof( s ) / sizeof( int ) );
+        JajodiaMutchler::instance().close_connections( sites );
+    }
+
+    for ( int i = 0; i < NUM_OF_UPDATES; i++ )
+    {
+        JajodiaMutchler::instance().execute_update();
+    }
+
+    // Stage 3.
+    // Do_partition
+    if ( server_num == 1 )
+    {
+        int s[] = { 2, 3, 4 };
+        vector<int> sites( s, s + sizeof( s ) / sizeof( int ) );
+        JajodiaMutchler::instance().close_connections( sites );
+    }
+
+    if ( server_num == 2 || server_num == 3 || server_num == 4 )
+    {
+        int s[] = { 1 };
+        vector<int> sites( s, s + sizeof( s ) / sizeof( int ) );
+        JajodiaMutchler::instance().close_connections( sites );
+    }
+
+    if ( server_num == 5 || server_num == 6 || server_num == 7 )
+    {
+        int s[] = { 8 };
+        vector<int> sites( s, s + sizeof( s ) / sizeof( int ) );
+        JajodiaMutchler::instance().close_connections( sites );
+    }
+
+    if ( server_num == 8 )
+    {
+        int s[] = { 5, 6, 7 };
+        vector<int> sites( s, s + sizeof( s ) / sizeof( int ) );
+        JajodiaMutchler::instance().close_connections( sites );
     }
 
     for ( int i = 0; i < NUM_OF_UPDATES; i++ )

@@ -24,6 +24,7 @@ public:
     void broadcast_all( JAJODIA_MSG_TYPE type );
     void process_message( SimpleMessage* message );
     void close_connections( std::vector<int>& sites );
+    void open_connections( std::vector<int>& sites );
 
 private:
 	JajodiaMutchler() {}

@@ -377,8 +377,10 @@ void JajodiaMutchler::close_connections( std::vector<int>& sites )
 	}
 }
 
-
-
+void JajodiaMutchler::open_connections( std::vector<int>& sites )
+{
+	
+}
 
 
 
