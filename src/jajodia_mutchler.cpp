@@ -379,7 +379,16 @@ void JajodiaMutchler::close_connections( std::vector<int>& sites )
 
 void JajodiaMutchler::open_connections( std::vector<int>& sites )
 {
-	
+	std::vector<TcpConfig> cfgs = config->get_all();
+
+	for ( int i = 0; i < sites.size(); i++ )
+	{
+		connections.add_connection( cfgs[sites[i] - 1].number,
+								    cfgs[sites[i] - 1].port,
+								    cfgs[sites[i] - 1].host
+								   );
+		connections.connect( sites[i] );
+	}
 }
 
 

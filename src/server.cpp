@@ -160,6 +160,27 @@ int main( int argc, char const *argv[] )
         JajodiaMutchler::instance().execute_update();
     }
 
+    // stage 4.
+    // Do merge
+    if ( server_num == 2 || server_num == 3 || server_num == 4 )
+    {
+        int s[] = { 5, 6, 7 };
+        vector<int> sites( s, s + sizeof( s ) / sizeof( int ) );
+        JajodiaMutchler::instance().open_connections( sites );
+    }
+
+    if ( server_num == 5 || server_num == 6 || server_num == 7 )
+    {
+        int s[] = { 2, 3, 4 };
+        vector<int> sites( s, s + sizeof( s ) / sizeof( int ) );
+        JajodiaMutchler::instance().open_connections( sites );
+    }
+
+    for ( int i = 0; i < NUM_OF_UPDATES; i++ )
+    {
+        JajodiaMutchler::instance().execute_update();
+    }
+
     while( !do_terminate )
     {
         usleep( 10000 );
