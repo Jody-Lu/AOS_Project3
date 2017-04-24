@@ -56,7 +56,7 @@ void JajodiaMutchler::execute_update( void )
 	// launch dry run
 
 	execute_dryrun();
-	std::cout << "[INFO] Execute Dryrun" << std::endl;
+	//std::cout << "[INFO] Execute Dryrun" << std::endl;
 
 	while ( dryrun )
 	{
@@ -67,8 +67,8 @@ void JajodiaMutchler::execute_update( void )
 	// Get #connections
 	int num_connections = num_site_available + 1;
 
-	std::cout << "Minimum site: " << min_site_id << std::endl;
-	std::cout << "Number of reachable sites: " << num_site_available << std::endl;
+	//std::cout << "[DEBUG] Minimum site: " << min_site_id << std::endl;
+	//std::cout << "[DEBUG] Number of reachable sites: " << num_site_available << std::endl;
 
 	if ( my_id != min_site_id )
 	{
@@ -85,7 +85,7 @@ void JajodiaMutchler::execute_update( void )
 	responses.push_back( std::make_pair( my_id, std::make_tuple( VN, RU, DS ) ) );
 
 	// Send VOTE_REQUEST
-	std::cout << "[INFO] Broadcast VOTE_REQUEST" << std::endl;
+	//std::cout << "[INFO] Broadcast VOTE_REQUEST" << std::endl;
 	broadcast_all( VOTE_REQUEST );
 
 	// Wait until collect all responses
@@ -95,7 +95,7 @@ void JajodiaMutchler::execute_update( void )
 		usleep( TIME_WAIT_RESPONSE );
 	}
 
-	std::cout << "[INFO] Execute Is_Distinguished routine" << std::endl;
+	//std::cout << "[INFO] Execute Is_Distinguished routine" << std::endl;
 
 	if ( !is_distinguished() )
 	{	// S does not belongs to distinguished partition
@@ -113,10 +113,10 @@ void JajodiaMutchler::execute_update( void )
 		// 1. Modify this node's VN, RU, DS
 		VN = M + 1;
 		RU = responses.size();
-		int newDS = std::get<2>( responses[0].second ); // update to Min DS in responses
+		int newDS = responses[0].first; // update to Min DS in responses
         for ( int i = 1; i < (int)responses.size(); i++ )
         {
-            int tempDS = std::get<2>( responses[i].second );
+            int tempDS = responses[i].first;
             if ( newDS > tempDS )
             {
                 newDS = tempDS;
@@ -267,7 +267,7 @@ void JajodiaMutchler::process_commit( JajodiaMessage *mm )
 // Procees the coming VOTE_REQUEST
 void JajodiaMutchler::process_vote_request( JajodiaMessage *mm )
 {
-	std::cout << "[INFO] Receiving VOTE_REQUEST" << std::endl;
+	//std::cout << "[INFO] Receiving VOTE_REQUEST" << std::endl;
 
 	// Issue LOCK_REQUEST to local lock manager
 	process_lock_request( );
@@ -305,7 +305,7 @@ bool JajodiaMutchler::is_distinguished()
 		}
 	}
 
-	std::cout << "[DEBUG] Current version: " << M << std::endl;
+	//std::cout << "[DEBUG] Current version: " << M << std::endl;
 
 	// Get set I
 	for ( int i = 0; i < (int)responses.size(); i++ )

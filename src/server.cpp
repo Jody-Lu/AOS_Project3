@@ -182,9 +182,9 @@ int main( int argc, char const *argv[] )
     }
 
     // Termination
-    usleep( 999999 );
+    usleep( 9999999 );
 
-    if ( server_num == 1 )
+    if ( server_num == 2 )
     {
         JajodiaMutchler::instance().reset_connections();
         JajodiaMutchler::instance().broadcast_all( PREP_TERM );
@@ -198,7 +198,7 @@ int main( int argc, char const *argv[] )
         usleep( 10000 );
     }
 
-    cout << "[Server] " << my_conf.number << "Buy :)" << endl;
+    cout << "[Server] " << my_conf.number << " Buy :)" << endl;
     return 0;
 }
 
