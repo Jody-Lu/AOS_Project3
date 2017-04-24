@@ -72,11 +72,27 @@ void JajodiaMutchler::execute_update( void )
 	}
 	else
 	{
-		// TODO:
-		// S does not belongs to distinguished partition
+		// Done - Genya
+		// S does belong to distinguished partition
 		// 1. Modify this node's VN, RU, DS
+        VN = M+1;
+        
+        RU = responses.size();
+        
+        int newDS = std::get<2>(responses[0].second); // update to Min DS in responses
+        for (int i = 1; i < responses.size(); i++) {
+            int tempDS = std::get<2>(responses[i].second);
+            if (newDS > tempDS) {
+                newDS = tempDS;
+            }
+        }
+        DS = newDS;
+        
 		// 2. Send COMMIT message
+        broadcast_all(COMMIT);
+        
 		// 3. Issue RELEASE_LOCK
+        process_release_lock();
 	}
 
 	// clear responses
@@ -100,7 +116,12 @@ void JajodiaMutchler::broadcast_all( JAJODIA_MSG_TYPE type )
 		}
 		mm->jajodia_t = type;
 		mm->id = my_id;
-
+        
+        //added - Genya
+        mm->VN = VN;
+        mm->RU = RU;
+        mm->DS = DS;
+        
 		conn.send( &message, sizeof( SimpleMessage ) );
 		conn.receive( &message, sizeof( SimpleMessage ) );
 
@@ -119,6 +140,8 @@ void JajodiaMutchler::broadcast_all( JAJODIA_MSG_TYPE type )
 void JajodiaMutchler::process_release_lock( void )
 {
 	updating = false;
+    
+    std::cout << "[INFO] aft release VN = " << VN << " RU = " << RU << " DS = " << DS << std::endl; // added - Genya
 }
 
 void JajodiaMutchler::process_abort( JajodiaMessage* mm )
@@ -155,9 +178,12 @@ void JajodiaMutchler::process_message( SimpleMessage *message )
 
 void JajodiaMutchler::process_commit( JajodiaMessage *mm )
 {
-	// TODO
-	// 1. Set new VN, RU, DS ( call do_update)
+	// Done - Genya
+	// 1. Set new VN, RU, DS (call do_update)
+    do_update( mm );
+    
 	// 2. Issue RELEASE_LOCK
+    process_release_lock();
 }
 
 // Procees the coming VOTE_REQUEST
@@ -224,7 +250,14 @@ bool JajodiaMutchler::is_distinguished()
 	// case (2)
 	if ( I.size() == N / 2 )
 	{
-		// TODO
+		// Done - Genya
+        bool hasDS = false;
+        for (int i = 0; i < responses.size(); i++) {
+            if (responses[i].first == DS) {
+                hasDS = true;
+            }
+        }
+        return hasDS;
 	}
 
 	// case (3)
@@ -236,10 +269,14 @@ bool JajodiaMutchler::is_distinguished()
 	return true;
 }
 
-void JajodiaMutchler::do_update()
+void JajodiaMutchler::do_update( JajodiaMessage *mm )
 {
-	// TODO
+	// Done - Genya
 	// 1. update VN, RU, DS
+    VN = mm->VN;
+    RU = mm->RU;
+    DS = mm->DS;
+    
 }
 
 // Send message to particular peer in the same partition

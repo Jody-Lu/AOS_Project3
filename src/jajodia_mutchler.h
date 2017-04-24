@@ -34,7 +34,7 @@ private:
 	void process_lock_request( void );
 	void process_release_lock( void );
 	bool is_distinguished();
-	void do_update();
+	void do_update( JajodiaMessage* mm ); //chnaged - Genya
 	void catch_up();
 
 	void send( int id, SimpleMessage& message );
