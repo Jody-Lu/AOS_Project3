@@ -182,11 +182,13 @@ int main( int argc, char const *argv[] )
     }
 
     // Termination
-    JajodiaMutchler::instance().reset_connections();
+    usleep( 999999 );
+
     if ( server_num == 1 )
     {
-        JajodiaMutchler::instance().broadcast_all( TERMINATE );
-        JajodiaMutchler::instance().close();
+        JajodiaMutchler::instance().reset_connections();
+        JajodiaMutchler::instance().broadcast_all( PREP_TERM );
+        JajodiaMutchler::instance().broadcast_all( TERM );
         server_ptr->terminate();
         do_terminate = true;
     }
